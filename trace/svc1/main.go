@@ -56,15 +56,15 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("index handler")
 
 	tr := tp.Tracer("component-main")
-	ctx, span := tr.Start(context.Background(), "index-handler")
+	spanCtx, span := tr.Start(context.Background(), "index-handler")
 	defer span.End()
 
 	time.Sleep(time.Second * 1)
 	wg := &sync.WaitGroup{}
 
 	wg.Add(1)
-	go funA(ctx, wg)
-	funB(ctx)
+	go funA(spanCtx, wg)
+	funB(spanCtx)
 
 	wg.Wait()
 }
@@ -75,15 +75,15 @@ func MainBaggageHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("index handler")
 
 	tr := tp.Tracer("component-main")
-	ctx, span := tr.Start(context.Background(), "index-handler")
+	spanCtx, span := tr.Start(context.Background(), "index-handler")
 	defer span.End()
 
 	time.Sleep(time.Second * 1)
 	wg := &sync.WaitGroup{}
 
 	wg.Add(1)
-	go funA(ctx, wg)
-	funcBWithBaggage(ctx)
+	go funA(spanCtx, wg)
+	funcBWithBaggage(spanCtx)
 
 	wg.Wait()
 }
@@ -138,7 +138,7 @@ func funB(ctx context.Context) {
 
 	tr := otel.Tracer("component-main")
 
-	spanctx, span := tr.Start(ctx, "func-b")
+	spanCtx, span := tr.Start(ctx, "func-b")
 
 	fmt.Println("trace:", span.SpanContext().TraceID().String(), ", span: ", span.SpanContext().SpanID())
 
@@ -150,7 +150,7 @@ func funB(ctx context.Context) {
 	req.Header.Set("span-id", span.SpanContext().SpanID().String())
 
 	p := otel.GetTextMapPropagator()
-	p.Inject(spanctx, propagation.HeaderCarrier(req.Header))
+	p.Inject(spanCtx, propagation.HeaderCarrier(req.Header))
 
 	// 发送请求
 	_, _ = client.Do(req)
@@ -164,7 +164,7 @@ func funcBWithBaggage(ctx context.Context) {
 	fmt.Println("do function b baggage")
 
 	tr := otel.Tracer("component-main")
-	spanctx, span := tr.Start(ctx, "func-b-with-baggage")
+	spanCtx, span := tr.Start(ctx, "func-b-with-baggage")
 
 	client := &http.Client{}
 	req, _ := http.NewRequest("POST", "http://localhost:8090/service-2-baggage", nil)
@@ -177,7 +177,7 @@ func funcBWithBaggage(ctx context.Context) {
 
 	b, _ := baggage.New(traceMember, spanMember)
 
-	ctxBaggage := baggage.ContextWithBaggage(spanctx, b)
+	ctxBaggage := baggage.ContextWithBaggage(spanCtx, b)
 
 	fmt.Println("trace id : ", span.SpanContext().TraceID().String())
 
@@ -200,16 +200,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Register our TracerProvider as the global so any imported
-	// instrumentation in the future will default to using it.
 	otel.SetTracerProvider(tp)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	// Cleanly shutdown and flush telemetry when the application exits.
 	defer func(ctx context.Context) {
-		// Do not make the application hang when it is shutdown.
 		ctx, cancel = context.WithTimeout(ctx, time.Second*5)
 		defer cancel()
 		if err := tp.Shutdown(ctx); err != nil {

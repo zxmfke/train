@@ -70,7 +70,7 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 	traceid, _ := trace.TraceIDFromHex(traceID)
 	spanid, _ := trace.SpanIDFromHex(spanID)
 
-	spanctx := trace.NewSpanContext(trace.SpanContextConfig{
+	spanCtx := trace.NewSpanContext(trace.SpanContextConfig{
 		TraceID:    traceid,
 		SpanID:     spanid,
 		TraceFlags: trace.FlagsSampled, //这个没写，是不会记录的
@@ -79,7 +79,7 @@ func MainHandler(w http.ResponseWriter, r *http.Request) {
 	})
 
 	// 不用pctx，不会把spanctx当做parentCtx
-	sct := trace.ContextWithRemoteSpanContext(pctx, spanctx)
+	sct := trace.ContextWithRemoteSpanContext(pctx, spanCtx)
 
 	_, span := tr.Start(sct, "func-c")
 
@@ -105,7 +105,7 @@ func MainHandlerWithBaggage(w http.ResponseWriter, r *http.Request) {
 	traceid, _ := trace.TraceIDFromHex(bag.Member("trace-id").Value())
 	spanid, _ := trace.SpanIDFromHex(bag.Member("span-id").Value())
 
-	spanctx := trace.NewSpanContext(trace.SpanContextConfig{
+	spanCtx := trace.NewSpanContext(trace.SpanContextConfig{
 		TraceID:    traceid,
 		SpanID:     spanid,
 		TraceFlags: trace.FlagsSampled, //这个没写，是不会记录的
@@ -114,7 +114,7 @@ func MainHandlerWithBaggage(w http.ResponseWriter, r *http.Request) {
 	})
 
 	// 不用pctx，不会把spanctx当做parentCtx
-	sct := trace.ContextWithRemoteSpanContext(pctx, spanctx)
+	sct := trace.ContextWithRemoteSpanContext(pctx, spanCtx)
 
 	_, span := tr.Start(sct, "func-c-with-baggage")
 
