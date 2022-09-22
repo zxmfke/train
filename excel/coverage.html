@@ -1,0 +1,396 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>excel: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">train/excel/excel.go (91.7%)</option>
+				
+				<option value="file1">train/excel/read.go (83.3%)</option>
+				
+				<option value="file2">train/excel/sheet.go (100.0%)</option>
+				
+				<option value="file3">train/excel/write.go (92.6%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package excel
+
+import (
+        "github.com/xuri/excelize/v2"
+        "os"
+        "path/filepath"
+)
+
+// Operator excel操作器
+type Operator struct {
+        curSheet  string
+        excelFile *excelize.File
+        sheetMap  map[string]*sheet
+}
+
+// SheetConf excel页签配置
+type SheetConf struct {
+        Name   string `json:"name"`
+        ColLen int    `json:"colLen"`
+}
+
+var defaultSheets = []SheetConf{
+        {
+                Name:   "Sheet1",
+                ColLen: 20,
+        },
+}
+
+// New 初始化返回一个Excel操作类，默认使用Sheet1作为首页和当前操作的sheet
+func New(sheets []SheetConf) *Operator <span class="cov8" title="1">{
+
+        if len(sheets) == 0 </span><span class="cov8" title="1">{
+                sheets = defaultSheets
+        }</span>
+
+        <span class="cov8" title="1">var (
+                defaultSheet = sheets[0]
+                operator     = &amp;Operator{
+                        curSheet:  defaultSheet.Name,
+                        excelFile: excelize.NewFile(),
+                        sheetMap:  make(map[string]*sheet),
+                }
+        )
+
+        defer func() </span><span class="cov8" title="1">{
+                // excelize.NewFile会默认创建一个Sheet1的sheet
+                if len(sheets) != 0 </span><span class="cov8" title="1">{
+                        operator.excelFile.DeleteSheet("Sheet1")
+                }</span>
+        }()
+
+        <span class="cov8" title="1">for i := 0; i &lt; len(sheets); i++ </span><span class="cov8" title="1">{
+                sheetIndex := operator.newSheet(sheets[i].Name)
+                operator.sheetMap[sheets[i].Name] = &amp;sheet{
+                        index:           sheetIndex,
+                        name:            sheets[i].Name,
+                        colMaxLen:       sheets[i].ColLen,
+                        rowCellTemplate: nil,
+                }
+        }</span>
+
+        <span class="cov8" title="1">operator.SwitchSheet(defaultSheet.Name)
+
+        return operator</span>
+}
+
+// newSheet 创建新的sheet
+func (o *Operator) newSheet(sheetName string) int <span class="cov8" title="1">{
+        return o.excelFile.NewSheet(sheetName)
+}</span>
+
+// SwitchSheet 切换excel的tab
+func (o *Operator) SwitchSheet(sheetName string) <span class="cov8" title="1">{
+
+        var (
+                sheetTab = o.sheetMap[sheetName]
+        )
+
+        sheetTab.initHeader()
+        o.excelFile.SetActiveSheet(sheetTab.index)
+        o.curSheet = sheetName
+}</span>
+
+// getCurSheet 获取当前sheet
+func (o *Operator) getCurSheet() *sheet <span class="cov8" title="1">{
+        return o.sheetMap[o.curSheet]
+}</span>
+
+// SaveAs 存储，如果文件夹不存在则创建文件夹后存储
+func (o *Operator) SaveAs(path string) error <span class="cov8" title="1">{
+        dir := filepath.Dir(path)
+        if err := os.MkdirAll(dir, 0766); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">if err := o.excelFile.SaveAs(path); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (o *Operator) Close() error <span class="cov8" title="1">{
+        return o.excelFile.Close()
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package excel
+
+import "github.com/xuri/excelize/v2"
+
+// Read excel文件读取，将读取到数据封装为map，表格第一行视为表头，表头的每一列作为map的key（请尽量避免表头中包含中文）
+func Read(filePath, sheet string) ([]map[string]string, error) <span class="cov8" title="1">{
+        f, err := excelize.OpenFile(filePath)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">rows, err := f.GetRows(sheet)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">var result = make([]map[string]string, len(rows))
+        if len(rows) &lt;= 1 </span><span class="cov0" title="0">{
+                return result, nil
+        }</span>
+
+        <span class="cov8" title="1">headerKeys := rows[0]
+
+        for rowIndex := 1; rowIndex &lt; len(rows); rowIndex++ </span><span class="cov8" title="1">{
+                row := make(map[string]string)
+                for colIndex, col := range headerKeys </span><span class="cov8" title="1">{
+
+                        if colIndex &gt; (len(rows[rowIndex]) - 1) </span><span class="cov0" title="0">{
+                                continue</span>
+                        }
+
+                        <span class="cov8" title="1">row[col] = rows[rowIndex][colIndex]</span>
+                }
+                <span class="cov8" title="1">result[rowIndex-1] = row</span>
+        }
+
+        <span class="cov8" title="1">return result, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package excel
+
+import "fmt"
+
+var alphabetMaxNo = 26
+var headerAlphabet = map[int]string{
+        0:  "A",
+        1:  "B",
+        2:  "C",
+        3:  "D",
+        4:  "E",
+        5:  "F",
+        6:  "G",
+        7:  "H",
+        8:  "I",
+        9:  "J",
+        10: "K",
+        11: "L",
+        12: "M",
+        13: "N",
+        14: "O",
+        15: "P",
+        16: "Q",
+        17: "R",
+        18: "S",
+        19: "T",
+        20: "U",
+        21: "V",
+        22: "W",
+        23: "X",
+        24: "Y",
+        25: "Z",
+}
+
+type sheet struct {
+        index           int
+        name            string
+        colMaxLen       int
+        rowCellTemplate []*cell
+}
+
+type cell struct {
+        Col   string // 横轴字母表
+        Row   int    // 第几行
+        Value interface{}
+}
+
+// location 获取此cell位置，比如A1 AA2
+func (c *cell) location() string <span class="cov8" title="1">{
+        return fmt.Sprintf("%s%d", c.Col, c.Row)
+}</span>
+
+// initHeader 初始化col的Y轴
+func (s *sheet) initHeader() <span class="cov8" title="1">{
+
+        if len(s.rowCellTemplate) != 0 </span><span class="cov8" title="1">{
+                return
+        }</span>
+
+        <span class="cov8" title="1">for i := 0; i &lt; s.colMaxLen; i++ </span><span class="cov8" title="1">{
+                quotient := i / alphabetMaxNo
+                mod := i % alphabetMaxNo
+                key := headerAlphabet[mod]
+                if quotient != 0 </span><span class="cov8" title="1">{
+                        key += headerAlphabet[quotient]
+                }</span>
+
+                <span class="cov8" title="1">s.rowCellTemplate = append(s.rowCellTemplate, &amp;cell{
+                        Col: key,
+                })</span>
+        }
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package excel
+
+// WriteHeader 写入header
+func (o *Operator) WriteHeader(headers []string) error <span class="cov8" title="1">{
+
+        curSheet := o.getCurSheet()
+
+        if len(headers) &gt; curSheet.colMaxLen </span><span class="cov8" title="1">{
+                return OutOfColumn
+        }</span>
+
+        <span class="cov8" title="1">for i := 0; i &lt; len(headers); i++ </span><span class="cov8" title="1">{
+                curSheet.rowCellTemplate[i].Row = 1
+                curSheet.rowCellTemplate[i].Value = headers[i]
+        }</span>
+
+        <span class="cov8" title="1">return o.WriteRow(curSheet.rowCellTemplate...)</span>
+}
+
+// WriteAll 写入所有的数据，不包括header
+func (o *Operator) WriteAll(cells [][]interface{}) error <span class="cov8" title="1">{
+        var (
+                rows     = len(cells)
+                rowBias  = 2
+                curSheet = o.getCurSheet()
+        )
+
+        for i := 0; i &lt; rows; i++ </span><span class="cov8" title="1">{
+                cols := len(cells[i])
+
+                if cols == 0 </span><span class="cov8" title="1">{
+                        continue</span>
+                }
+
+                <span class="cov8" title="1">if cols &gt; curSheet.colMaxLen </span><span class="cov8" title="1">{
+                        cols = curSheet.colMaxLen
+                }</span>
+
+                <span class="cov8" title="1">for j := 0; j &lt; cols; j++ </span><span class="cov8" title="1">{
+                        curSheet.rowCellTemplate[j].Row = i + rowBias
+                        curSheet.rowCellTemplate[j].Value = cells[i][j]
+                }</span>
+
+                <span class="cov8" title="1">if err := o.WriteRow(curSheet.rowCellTemplate...); err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+        }
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+// WriteRow 写入单行数据
+func (o *Operator) WriteRow(cells ...*cell) error <span class="cov8" title="1">{
+        curSheet := o.getCurSheet()
+
+        if len(cells) &gt; curSheet.colMaxLen </span><span class="cov8" title="1">{
+                return OutOfColumn
+        }</span>
+
+        <span class="cov8" title="1">for _, c := range cells </span><span class="cov8" title="1">{
+                if err := o.excelFile.SetCellValue(o.curSheet, c.location(), c.Value); err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+        }
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
