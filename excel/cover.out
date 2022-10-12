@@ -15,7 +15,7 @@ train/excel/excel.go:96.2,96.49 1 1
 train/excel/excel.go:100.2,100.12 1 1
 train/excel/excel.go:92.47,94.3 1 0
 train/excel/excel.go:96.49,98.3 1 0
-train/excel/excel.go:103.34,105.2 1 1
+train/excel/excel.go:104.34,106.2 1 1
 train/excel/read.go:6.64,8.16 2 1
 train/excel/read.go:12.2,13.16 2 1
 train/excel/read.go:17.2,18.20 2 1
@@ -41,7 +41,7 @@ train/excel/write.go:12.2,12.36 1 1
 train/excel/write.go:17.2,17.48 1 1
 train/excel/write.go:8.39,10.3 1 1
 train/excel/write.go:12.36,15.3 2 1
-train/excel/write.go:21.58,28.28 2 1
+train/excel/write.go:21.53,28.28 2 1
 train/excel/write.go:49.2,49.12 1 1
 train/excel/write.go:28.28,31.16 2 1
 train/excel/write.go:35.3,35.32 1 1

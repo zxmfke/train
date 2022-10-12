@@ -20,17 +20,17 @@ func TestInitHeader(t *testing.T) {
 		{
 			Col:   "A",
 			Row:   1,
-			Value: nil,
+			Value: "",
 		},
 		{
 			Col:   "B",
 			Row:   1,
-			Value: nil,
+			Value: "",
 		},
 		{
 			Col:   "C",
 			Row:   1,
-			Value: nil,
+			Value: "",
 		},
 	}
 

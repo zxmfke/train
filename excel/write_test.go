@@ -118,13 +118,13 @@ func TestOperator_WriteAll(t *testing.T) {
 	cases := []struct {
 		name      string
 		fileName  string
-		data      [][]interface{}
+		data      [][]string
 		expectErr error
 	}{
 		{
 			name:     "写入col超过上限，只写入col最长",
 			fileName: "testdata/write_all_ouf_of_col.xlsx",
-			data: [][]interface{}{
+			data: [][]string{
 				{},
 				{"data1", "data2", "data3", "data4", "data5", "data6"},
 			},
@@ -133,7 +133,7 @@ func TestOperator_WriteAll(t *testing.T) {
 		{
 			name:     "正常写入data",
 			fileName: "testdata/write_all.xlsx",
-			data: [][]interface{}{
+			data: [][]string{
 				{"data1", "data2", "data3"},
 				{"data4", "data5", "data6"},
 			},

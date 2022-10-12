@@ -6,10 +6,13 @@ import (
 )
 
 func main() {
+	// 初始化 excel operator
 	operator := excel.New([]excel.SheetConf{
 		{Name: "测试中文Tab", ColLen: 20}, {Name: "测试第二个Tab", ColLen: 10},
 	})
+	defer operator.Close()
 
+	// 写入header
 	headers := []string{}
 
 	for i := 0; i < 20; i++ {
@@ -21,10 +24,11 @@ func main() {
 		return
 	}
 
-	data := make([][]interface{}, 5)
+	// 写入数据
+	data := make([][]string, 5)
 
 	for i := 0; i < 5; i++ {
-		data[i] = make([]interface{}, 20)
+		data[i] = make([]string, 20)
 		for j := 0; j < 20; j++ {
 			data[i][j] = fmt.Sprintf("%d%d", i, j)
 		}
@@ -37,10 +41,10 @@ func main() {
 
 	operator.SwitchSheet("测试第二个Tab")
 
-	data2 := make([][]interface{}, 4)
+	data2 := make([][]string, 4)
 
 	for i := 0; i < 4; i++ {
-		data2[i] = make([]interface{}, 10)
+		data2[i] = make([]string, 10)
 		for j := 0; j < 10; j++ {
 			data2[i][j] = fmt.Sprintf("%d%d", i, j)
 		}

@@ -100,6 +100,7 @@ func (o *Operator) SaveAs(path string) error {
 	return nil
 }
 
+// Close 关闭
 func (o *Operator) Close() error {
 	return o.excelFile.Close()
 }

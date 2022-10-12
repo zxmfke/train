@@ -42,7 +42,7 @@ type sheet struct {
 type cell struct {
 	Col   string // 横轴字母表
 	Row   int    // 第几行
-	Value interface{}
+	Value string
 }
 
 // location 获取此cell位置，比如A1 AA2

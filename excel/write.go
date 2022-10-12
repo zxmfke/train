@@ -18,7 +18,7 @@ func (o *Operator) WriteHeader(headers []string) error {
 }
 
 // WriteAll 写入所有的数据，不包括header
-func (o *Operator) WriteAll(cells [][]interface{}) error {
+func (o *Operator) WriteAll(cells [][]string) error {
 	var (
 		rows     = len(cells)
 		rowBias  = 2
