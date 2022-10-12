@@ -107,7 +107,7 @@ func New(sheets []SheetConf) *Operator {
 
 `SheetConf`类型，里面的`Name`就是excel表格每个sheet的名称，`ColLen`是这个sheet的顶部header的数量
 
-![image-20221012114338369](C:/Users/zhengxm/Documents/notes/images/excel_2.png)
+![image-20221012114338369](../images/excel_2.png)
 
 > 如果传入的是一个空的SheetsConf，会初始化一个`Sheet1`的sheet，不会报错
 
