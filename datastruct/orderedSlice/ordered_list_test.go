@@ -4,7 +4,7 @@ import "testing"
 
 func TestOrderedSlice(t *testing.T) {
 
-	orderList := NewOrderedSlice(OrderDesc)
+	orderList := NewOrderedSlice()
 
 	orderList.Insert(1, "A")
 	orderList.Insert(3, "C")
@@ -18,6 +18,27 @@ func TestOrderedSlice(t *testing.T) {
 	orderList.Insert(4, "B")
 
 	t.Logf("%s", orderList)
+
+	rangeNode := orderList.SearchKeyRange(2, 3)
+
+	t.Logf("range [2,3]")
+	for i := 0; i < len(rangeNode); i++ {
+		t.Logf("%s", rangeNode[i])
+	}
+
+	rangeNode = orderList.SearchKeyRange(1, 1)
+
+	t.Logf("range [1,1]")
+	for i := 0; i < len(rangeNode); i++ {
+		t.Logf("%s", rangeNode[i])
+	}
+
+	rangeNode = orderList.SearchKeyRange(4, 4)
+
+	t.Logf("range [4,4]")
+	for i := 0; i < len(rangeNode); i++ {
+		t.Logf("%s", rangeNode[i])
+	}
 
 	orderList.Delete(2)
 
