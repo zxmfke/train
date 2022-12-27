@@ -42,10 +42,12 @@ func (o *OrderedSlice) String() string {
 	return fmtString
 }
 
+// IsEmpty 查看 ordered slice 是否为空
 func (o *OrderedSlice) IsEmpty() bool {
 	return o.count == 0
 }
 
+// Insert 插入 key
 func (o *OrderedSlice) Insert(k int, v interface{}) {
 	if o.IsEmpty() {
 		o.data = append(o.data, &SliceNode{
@@ -78,6 +80,7 @@ func (o *OrderedSlice) Insert(k int, v interface{}) {
 	return
 }
 
+// SearchKey 查找具体的 key
 func (o *OrderedSlice) SearchKey(k int) (*SliceNode, bool) {
 	if o.IsEmpty() {
 		return nil, false
@@ -88,6 +91,7 @@ func (o *OrderedSlice) SearchKey(k int) (*SliceNode, bool) {
 	return node, has
 }
 
+// SearchKeyRange 查找范围内的 key
 func (o *OrderedSlice) SearchKeyRange(keyStart, keyEnd int) []*SliceNode {
 
 	var result = []*SliceNode{}
@@ -100,17 +104,10 @@ func (o *OrderedSlice) SearchKeyRange(keyStart, keyEnd int) []*SliceNode {
 		return result
 	}
 
-	_, startIndex, has := o.findKey(0, o.count-1, keyStart)
+	_, startIndex, _ := o.findKey(0, o.count-1, keyStart)
 
-	if has {
-		result = append(result, o.data[startIndex])
-	}
+	for i := startIndex; i < o.count; i++ {
 
-	if startIndex == o.count-1 {
-		return result
-	}
-
-	for i := startIndex + 1; i < o.count; i++ {
 		if o.data[i].K > keyEnd {
 			break
 		}
@@ -122,22 +119,20 @@ func (o *OrderedSlice) SearchKeyRange(keyStart, keyEnd int) []*SliceNode {
 }
 
 // findKey 找到 index
-// insert 调用就是找写入的 index
-// delete/search 调用就是找具体 key 对应的 index
 func (o *OrderedSlice) findKey(start, end int, key int) (*SliceNode, int, bool) {
 
 	middleIndex := o.findMiddleIndex(start, end)
 
-	if middleIndex == start || middleIndex == end {
+	if o.data[middleIndex].K == key {
+		return o.data[middleIndex], middleIndex, true
+	}
+
+	if start == end {
 		return o.data[middleIndex], middleIndex, o.data[middleIndex].K == key
 	}
 
 	if o.data[middleIndex].K > key {
 		return o.findKey(start, middleIndex-1, key)
-	}
-
-	if o.data[middleIndex].K == key {
-		return o.data[middleIndex], middleIndex, true
 	}
 
 	return o.findKey(middleIndex+1, end, key)
@@ -160,20 +155,13 @@ func (o *OrderedSlice) findKeyInsertIndex(start, end int, key int) (int, insertA
 		return middleIndex, Update
 	}
 
-	if middleIndex == start {
-		if o.data[end].K > key && o.data[middleIndex].K < key {
-			return middleIndex + 1, MoveInsertToNext
+	if start == end {
+
+		if o.data[start].K < key {
+			return middleIndex + 1, Nothing
 		}
 
-		return middleIndex + 1, Nothing
-	}
-
-	if middleIndex == end {
-		if o.data[start].K < key && o.data[middleIndex].K < key {
-			return middleIndex + 1, MoveInsertToNext
-		}
-
-		return middleIndex + 1, Nothing
+		return middleIndex, MoveInsertToNext
 	}
 
 	if o.data[middleIndex].K > key {
