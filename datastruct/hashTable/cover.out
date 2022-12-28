@@ -1,0 +1,18 @@
+mode: set
+github.com/zxmfke/train/datastruct/hashmap/hashmap.go:21.57,22.15 1 1
+github.com/zxmfke/train/datastruct/hashmap/hashmap.go:26.2,28.28 3 1
+github.com/zxmfke/train/datastruct/hashmap/hashmap.go:32.2,35.15 3 1
+github.com/zxmfke/train/datastruct/hashmap/hashmap.go:39.2,39.17 1 1
+github.com/zxmfke/train/datastruct/hashmap/hashmap.go:22.15,24.3 1 1
+github.com/zxmfke/train/datastruct/hashmap/hashmap.go:28.28,30.3 1 1
+github.com/zxmfke/train/datastruct/hashmap/hashmap.go:35.15,37.3 1 1
+github.com/zxmfke/train/datastruct/hashmap/hashmap.go:42.35,44.2 1 1
+github.com/zxmfke/train/datastruct/hashmap/hashmap.go:46.57,49.20 2 1
+github.com/zxmfke/train/datastruct/hashmap/hashmap.go:53.2,55.12 2 1
+github.com/zxmfke/train/datastruct/hashmap/hashmap.go:49.20,51.3 1 1
+github.com/zxmfke/train/datastruct/hashmap/hashmap.go:58.52,61.20 2 1
+github.com/zxmfke/train/datastruct/hashmap/hashmap.go:65.2,65.31 1 1
+github.com/zxmfke/train/datastruct/hashmap/hashmap.go:61.20,63.3 1 1
+github.com/zxmfke/train/datastruct/hashmap/hashmap.go:68.41,71.20 2 1
+github.com/zxmfke/train/datastruct/hashmap/hashmap.go:75.2,77.12 2 1
+github.com/zxmfke/train/datastruct/hashmap/hashmap.go:71.20,73.3 1 1

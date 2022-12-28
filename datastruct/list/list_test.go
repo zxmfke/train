@@ -11,19 +11,19 @@ func TestList_String(t *testing.T) {
 
 	t.Logf("%s", root)
 
-	root.Set("a", 1)
-	root.Set("b", 2)
+	root.Set(1, 1)
+	root.Set(2, 2)
 
 	t.Logf("%s", root)
 }
 
 func TestNewListRootWithInit(t *testing.T) {
-	root := NewListRootWithInit("a", 1)
+	root := NewListRootWithInit(1, 1)
 
-	_, has := root.Get("a")
+	_, has := root.Get(1)
 	assert.Equal(t, true, has)
 
-	root.Set("b", 2)
+	root.Set(2, 2)
 	t.Logf("%s", root)
 }
 
@@ -32,26 +32,26 @@ func TestList_Set(t *testing.T) {
 
 	cases := []struct {
 		name      string
-		setKey    string
+		setKey    int
 		setValue  interface{}
 		wantHas   bool
 		wantValue interface{}
 	}{
 		{
 			name:      "插入第一个 key",
-			setKey:    "a",
+			setKey:    1,
 			setValue:  1,
 			wantHas:   true,
 			wantValue: 1,
 		}, {
 			name:      "插入第二个 key",
-			setKey:    "b",
+			setKey:    2,
 			setValue:  2,
 			wantHas:   true,
 			wantValue: 2,
 		}, {
 			name:      "插入相同的 key",
-			setKey:    "b",
+			setKey:    2,
 			setValue:  3,
 			wantHas:   true,
 			wantValue: 3,
@@ -74,28 +74,28 @@ func TestList_Set(t *testing.T) {
 
 func TestList_Get(t *testing.T) {
 	root := NewListRoot()
-	root.Set("a", 1)
-	root.Set("b", 2)
+	root.Set(1, 1)
+	root.Set(2, 2)
 
 	cases := []struct {
 		name      string
-		searchKey string
+		searchKey int
 		wantHas   bool
 		wantValue interface{}
 	}{
 		{
 			name:      "搜索一个不存在的 key",
-			searchKey: "c",
+			searchKey: 3,
 			wantHas:   false,
 			wantValue: 0,
 		}, {
 			name:      "搜索第一个 key",
-			searchKey: "a",
+			searchKey: 1,
 			wantHas:   true,
 			wantValue: 1,
 		}, {
 			name:      "搜索 nextNode 的 key",
-			searchKey: "b",
+			searchKey: 2,
 			wantHas:   true,
 			wantValue: 2,
 		},
@@ -115,37 +115,37 @@ func TestList_Get(t *testing.T) {
 
 func TestList_Delete(t *testing.T) {
 	root := NewListRoot()
-	root.Set("a", 1)
-	root.Set("b", 2)
-	root.Set("c", 3)
-	root.Set("d", 3)
+	root.Set(1, 1)
+	root.Set(2, 2)
+	root.Set(3, 3)
+	root.Set(4, 3)
 
 	cases := []struct {
 		name      string
-		delKey    string
+		delKey    int
 		wantHas   bool
 		print     bool
 		wantPrint string
 	}{
 		{
 			name:    "删除一个不存在的 key",
-			delKey:  "e",
+			delKey:  5,
 			wantHas: false,
 		}, {
 			name:    "删除中间的 key",
-			delKey:  "b",
+			delKey:  2,
 			wantHas: false,
 		}, {
 			name:    "删除头的 key",
-			delKey:  "a",
+			delKey:  1,
 			wantHas: false,
 		}, {
 			name:    "删除尾的 key",
-			delKey:  "d",
+			delKey:  4,
 			wantHas: false,
 		}, {
 			name:      "删空",
-			delKey:    "c",
+			delKey:    3,
 			wantHas:   false,
 			print:     true,
 			wantPrint: "empty List",
@@ -169,28 +169,28 @@ func TestList_Delete(t *testing.T) {
 
 func TestList_Search(t *testing.T) {
 	root := NewListRoot()
-	root.Set("a", 1)
-	root.Set("b", 2)
+	root.Set(1, 1)
+	root.Set(2, 2)
 
 	cases := []struct {
 		name      string
-		searchKey string
+		searchKey int
 		wantHas   bool
 		wantValue interface{}
 	}{
 		{
 			name:      "搜索一个不存在的 key",
-			searchKey: "c",
+			searchKey: 3,
 			wantHas:   false,
 			wantValue: 0,
 		}, {
 			name:      "搜索第一个 key",
-			searchKey: "a",
+			searchKey: 1,
 			wantHas:   true,
 			wantValue: 1,
 		}, {
 			name:      "搜索 nextNode 的 key",
-			searchKey: "b",
+			searchKey: 2,
 			wantHas:   true,
 			wantValue: 2,
 		},

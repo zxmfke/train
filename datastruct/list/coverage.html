@@ -80,7 +80,7 @@ type List struct {
 }
 
 type LNode struct {
-        k    string
+        k    int
         v    interface{}
         next *LNode
         pre  *LNode
@@ -91,7 +91,7 @@ func NewListRoot() *List <span class="cov8" title="1">{
         return root
 }</span>
 
-func NewListRootWithInit(key string, v interface{}) *List <span class="cov8" title="1">{
+func NewListRootWithInit(key int, v interface{}) *List <span class="cov8" title="1">{
         l := new(List)
         node := newListNode(key, v)
         l.head = node
@@ -101,7 +101,7 @@ func NewListRootWithInit(key string, v interface{}) *List <span class="cov8" tit
         return l
 }</span>
 
-func newListNode(key string, v interface{}) *LNode <span class="cov8" title="1">{
+func newListNode(key int, v interface{}) *LNode <span class="cov8" title="1">{
         return &amp;LNode{
                 k:    key,
                 v:    v,
@@ -110,21 +110,21 @@ func newListNode(key string, v interface{}) *LNode <span class="cov8" title="1">
         }
 }</span>
 
-func (l *List) init(key string, v interface{}) <span class="cov8" title="1">{
+func (l *List) init(key int, v interface{}) <span class="cov8" title="1">{
         node := newListNode(key, v)
         l.tail = node
         l.head = node
         l.root = node
 }</span>
 
-func (l *List) Get(key string) (interface{}, bool) <span class="cov8" title="1">{
+func (l *List) Get(key int) (interface{}, bool) <span class="cov8" title="1">{
         node, ok := l.search(key)
         if !ok </span><span class="cov8" title="1">{
                 return nil, false
         }</span>
         <span class="cov8" title="1">return node.v, ok</span>
 }
-func (l *List) Set(key string, v interface{}) <span class="cov8" title="1">{
+func (l *List) Set(key int, v interface{}) <span class="cov8" title="1">{
         if l.head == nil </span><span class="cov8" title="1">{
                 l.init(key, v)
                 return
@@ -142,7 +142,7 @@ func (l *List) Set(key string, v interface{}) <span class="cov8" title="1">{
         l.tail = node</span>
 }
 
-func (l *List) Delete(key string) <span class="cov8" title="1">{
+func (l *List) Delete(key int) <span class="cov8" title="1">{
         nextNode := l.root
         var deleteNode *LNode
 
@@ -206,7 +206,7 @@ func (l *List) String() string <span class="cov8" title="1">{
         <span class="cov8" title="1">return listString</span>
 }
 
-func (l *List) search(key string) (*LNode, bool) <span class="cov8" title="1">{
+func (l *List) search(key int) (*LNode, bool) <span class="cov8" title="1">{
         nextNode := l.root
 
         for nextNode != nil </span><span class="cov8" title="1">{

@@ -9,7 +9,7 @@ type List struct {
 }
 
 type LNode struct {
-	k    string
+	k    int
 	v    interface{}
 	next *LNode
 	pre  *LNode
@@ -20,7 +20,7 @@ func NewListRoot() *List {
 	return root
 }
 
-func NewListRootWithInit(key string, v interface{}) *List {
+func NewListRootWithInit(key int, v interface{}) *List {
 	l := new(List)
 	node := newListNode(key, v)
 	l.head = node
@@ -30,7 +30,7 @@ func NewListRootWithInit(key string, v interface{}) *List {
 	return l
 }
 
-func newListNode(key string, v interface{}) *LNode {
+func newListNode(key int, v interface{}) *LNode {
 	return &LNode{
 		k:    key,
 		v:    v,
@@ -39,21 +39,21 @@ func newListNode(key string, v interface{}) *LNode {
 	}
 }
 
-func (l *List) init(key string, v interface{}) {
+func (l *List) init(key int, v interface{}) {
 	node := newListNode(key, v)
 	l.tail = node
 	l.head = node
 	l.root = node
 }
 
-func (l *List) Get(key string) (interface{}, bool) {
+func (l *List) Get(key int) (interface{}, bool) {
 	node, ok := l.search(key)
 	if !ok {
 		return nil, false
 	}
 	return node.v, ok
 }
-func (l *List) Set(key string, v interface{}) {
+func (l *List) Set(key int, v interface{}) {
 	if l.head == nil {
 		l.init(key, v)
 		return
@@ -71,7 +71,7 @@ func (l *List) Set(key string, v interface{}) {
 	l.tail = node
 }
 
-func (l *List) Delete(key string) {
+func (l *List) Delete(key int) {
 	nextNode := l.root
 	var deleteNode *LNode
 
@@ -135,7 +135,7 @@ func (l *List) String() string {
 	return listString
 }
 
-func (l *List) search(key string) (*LNode, bool) {
+func (l *List) search(key int) (*LNode, bool) {
 	nextNode := l.root
 
 	for nextNode != nil {

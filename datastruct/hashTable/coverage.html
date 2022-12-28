@@ -71,45 +71,82 @@
 		
 		<pre class="file" id="file0" style="display: none">package hashmap
 
-type HSMap struct {
-        m        HSMapValue
+import (
+        "errors"
+        "github.com/zxmfke/train/datastruct/list"
+)
+
+var (
+        ErrHSKeyOutOfRange       = errors.New("hash func key out of range")
+        ErrHSMapValueSizeInvalid = errors.New("hsMapValue size cant less than 10")
+)
+
+type HSTable struct {
+        data     []*list.List
         hashFunc HashFun
+        max      int
 }
 
-type HashFun = func(string) string
+type HashFun func(int) int
 
-func HF(f func(string) string) HashFun <span class="cov8" title="1">{
-        return HashFun(f)
-}</span>
+func NewHSTable(hf HashFun, size int) (*HSTable, error) <span class="cov8" title="1">{
+        if size &lt; 10 </span><span class="cov8" title="1">{
+                return nil, ErrHSMapValueSizeInvalid
+        }</span>
 
-func NewHSMap(hf HashFun, hsmv HSMapValue) *HSMap <span class="cov8" title="1">{
-        hsm := new(HSMap)
-        hsm.m = hsmv
+        <span class="cov8" title="1">hsm := new(HSTable)
+        hsm.data = make([]*list.List, size)
+        for i := 0; i &lt; size; i++ </span><span class="cov8" title="1">{
+                hsm.data[i] = list.NewListRoot()
+        }</span>
+
+        <span class="cov8" title="1">hsm.max = size
 
         hsm.hashFunc = defaultHashFunc
         if hf != nil </span><span class="cov8" title="1">{
                 hsm.hashFunc = hf
         }</span>
 
-        <span class="cov8" title="1">return hsm</span>
+        <span class="cov8" title="1">return hsm, nil</span>
 }
 
-func defaultHashFunc(key string) string <span class="cov8" title="1">{
-        return key
+func defaultHashFunc(key int) int <span class="cov8" title="1">{
+        return key % 10
 }</span>
 
-func (h *HSMap) Set(key string, value interface{}) <span class="cov8" title="1">{
+func (h *HSTable) Set(key int, value interface{}) error <span class="cov8" title="1">{
         hsKey := h.hashFunc(key)
-        h.m.Set(hsKey, value)
-}</span>
 
-func (h *HSMap) Get(key string) (interface{}, bool) <span class="cov8" title="1">{
-        return h.m.Get(h.hashFunc(key))
-}</span>
+        if hsKey &gt;= h.max </span><span class="cov8" title="1">{
+                return ErrHSKeyOutOfRange
+        }</span>
 
-func (h *HSMap) Delete(key string) <span class="cov8" title="1">{
-        h.m.Delete(h.hashFunc(key))
-}</span>
+        <span class="cov8" title="1">h.data[hsKey].Set(key, value)
+
+        return nil</span>
+}
+
+func (h *HSTable) Get(key int) (interface{}, bool) <span class="cov8" title="1">{
+        hsKey := h.hashFunc(key)
+
+        if hsKey &gt;= h.max </span><span class="cov8" title="1">{
+                return nil, false
+        }</span>
+
+        <span class="cov8" title="1">return h.data[hsKey].Get(key)</span>
+}
+
+func (h *HSTable) Delete(key int) error <span class="cov8" title="1">{
+        hsKey := h.hashFunc(key)
+
+        if hsKey &gt;= h.max </span><span class="cov8" title="1">{
+                return ErrHSKeyOutOfRange
+        }</span>
+
+        <span class="cov8" title="1">h.data[hsKey].Delete(h.hashFunc(key))
+
+        return nil</span>
+}
 </pre>
 		
 		</div>
