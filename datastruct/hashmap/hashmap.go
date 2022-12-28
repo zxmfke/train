@@ -5,7 +5,7 @@ type HSMap struct {
 	hashFunc HashFun
 }
 
-type HashFun func(string) string
+type HashFun = func(string) string
 
 func HF(f func(string) string) HashFun {
 	return HashFun(f)

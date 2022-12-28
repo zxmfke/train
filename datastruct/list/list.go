@@ -3,16 +3,16 @@ package list
 import "fmt"
 
 type List struct {
-	head *listNode
-	tail *listNode
-	root *listNode
+	head *LNode
+	tail *LNode
+	root *LNode
 }
 
-type listNode struct {
+type LNode struct {
 	k    string
 	v    interface{}
-	next *listNode
-	pre  *listNode
+	next *LNode
+	pre  *LNode
 }
 
 func NewListRoot() *List {
@@ -21,16 +21,17 @@ func NewListRoot() *List {
 }
 
 func NewListRootWithInit(key string, v interface{}) *List {
-	root := new(List)
+	l := new(List)
 	node := newListNode(key, v)
-	root.head = node
-	root.tail = node
+	l.head = node
+	l.tail = node
+	l.root = node
 
-	return root
+	return l
 }
 
-func newListNode(key string, v interface{}) *listNode {
-	return &listNode{
+func newListNode(key string, v interface{}) *LNode {
+	return &LNode{
 		k:    key,
 		v:    v,
 		next: nil,
@@ -45,13 +46,20 @@ func (l *List) init(key string, v interface{}) {
 	l.root = node
 }
 
+func (l *List) Get(key string) (interface{}, bool) {
+	node, ok := l.search(key)
+	if !ok {
+		return nil, false
+	}
+	return node.v, ok
+}
 func (l *List) Set(key string, v interface{}) {
 	if l.head == nil {
 		l.init(key, v)
 		return
 	}
 
-	node, ok := l.Search(key)
+	node, ok := l.search(key)
 	if ok {
 		node.v = v
 		return
@@ -65,7 +73,7 @@ func (l *List) Set(key string, v interface{}) {
 
 func (l *List) Delete(key string) {
 	nextNode := l.root
-	var deleteNode *listNode
+	var deleteNode *LNode
 
 	for nextNode != nil {
 		if nextNode.k == key {
@@ -110,19 +118,6 @@ func (l *List) Delete(key string) {
 	return
 }
 
-func (l *List) Search(key string) (*listNode, bool) {
-	nextNode := l.root
-
-	for nextNode != nil {
-		if nextNode.k == key {
-			return nextNode, true
-		}
-		nextNode = nextNode.next
-	}
-
-	return nil, false
-}
-
 func (l *List) String() string {
 	if l.head == nil {
 		return "empty List"
@@ -140,10 +135,15 @@ func (l *List) String() string {
 	return listString
 }
 
-func (l *List) Get(key string) (interface{}, bool) {
-	node, ok := l.Search(key)
-	if !ok {
-		return nil, false
+func (l *List) search(key string) (*LNode, bool) {
+	nextNode := l.root
+
+	for nextNode != nil {
+		if nextNode.k == key {
+			return nextNode, true
+		}
+		nextNode = nextNode.next
 	}
-	return node.v, ok
+
+	return nil, false
 }

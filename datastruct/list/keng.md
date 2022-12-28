@@ -1,0 +1,1 @@
+1. NewListRootWithInit 忘记赋值给 root
