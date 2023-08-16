@@ -45,7 +45,7 @@ func New(sheets []SheetConf) *Operator {
 	defer func() {
 		// excelize.NewFile会默认创建一个Sheet1的sheet
 		if len(sheets) != 0 {
-			operator.excelFile.DeleteSheet("Sheet1")
+			_ = operator.excelFile.DeleteSheet("Sheet1")
 		}
 	}()
 
@@ -66,7 +66,8 @@ func New(sheets []SheetConf) *Operator {
 
 // newSheet 创建新的sheet
 func (o *Operator) newSheet(sheetName string) int {
-	return o.excelFile.NewSheet(sheetName)
+	index, _ := o.excelFile.NewSheet(sheetName)
+	return index
 }
 
 // SwitchSheet 切换excel的tab
