@@ -207,3 +207,119 @@ func TestList_Search(t *testing.T) {
 		})
 	}
 }
+
+func TestList_DeleteTail(t *testing.T) {
+	root := NewListRoot()
+	root.Set(1, 1)
+	root.Set(2, 2)
+	root.Set(3, 3)
+	root.Set(4, 3)
+
+	t.Logf("%s", root)
+
+	cases := []struct {
+		name   string
+		expect int
+		has    bool
+	}{
+		{
+			name:   "删除尾部第1个",
+			expect: 3,
+			has:    true,
+		},
+		{
+			name:   "删除尾部第2个",
+			expect: 3,
+			has:    true,
+		},
+		{
+			name:   "删除尾部第3个",
+			expect: 2,
+			has:    true,
+		},
+		{
+			name:   "删除尾部第4个",
+			expect: 1,
+			has:    true,
+		},
+		{
+			name:   "删除一个空的list",
+			expect: 0,
+			has:    false,
+		},
+	}
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			v, has := root.DeleteTail()
+
+			t.Logf("%s", root)
+
+			assert.Equal(t, tt.has, has)
+
+			if has {
+				assert.Equal(t, tt.expect, v.(int))
+			}
+
+		})
+	}
+
+}
+
+func TestList_DeleteHead(t *testing.T) {
+	root := NewListRoot()
+	root.Set(1, 1)
+	root.Set(2, 2)
+	root.Set(3, 3)
+	root.Set(4, 3)
+
+	t.Logf("%s", root)
+
+	cases := []struct {
+		name   string
+		expect int
+		has    bool
+	}{
+		{
+			name:   "删除头部第1个",
+			expect: 1,
+			has:    true,
+		},
+		{
+			name:   "删除头部第2个",
+			expect: 2,
+			has:    true,
+		},
+		{
+			name:   "删除头部第3个",
+			expect: 3,
+			has:    true,
+		},
+		{
+			name:   "删除头部第4个",
+			expect: 3,
+			has:    true,
+		},
+		{
+			name:   "删除一个空的list",
+			expect: 0,
+			has:    false,
+		},
+	}
+
+	for _, tt := range cases {
+		t.Run(tt.name, func(t *testing.T) {
+			v, has := root.DeleteHead()
+
+			t.Logf("%s", root)
+
+			assert.Equal(t, tt.has, has)
+
+			if has {
+				assert.Equal(t, tt.expect, v.(int))
+			}
+
+		})
+	}
+
+}

@@ -98,8 +98,7 @@ func (l *List) Delete(key int) {
 
 	// 如果是尾巴，把尾巴的前一个节点的next置为空
 	if l.tail == deleteNode {
-		deleteNode.pre.next = nil
-		l.tail = deleteNode.pre
+		l.DeleteTail()
 		return
 	}
 
@@ -118,8 +117,55 @@ func (l *List) Delete(key int) {
 	return
 }
 
+// IsEmpty 是否为空
+func (l *List) IsEmpty() bool {
+	return l.head == nil
+}
+
+// DeleteTail 删除链表尾
+func (l *List) DeleteTail() (interface{}, bool) {
+
+	if l.IsEmpty() {
+		return nil, false
+	}
+
+	var tailNodeValue = l.tail.v
+
+	if l.tail == l.head {
+		l.head = nil
+		l.root = nil
+		l.tail = nil
+		return tailNodeValue, true
+	}
+
+	l.tail.pre.next = nil
+	l.tail = l.tail.pre
+	return tailNodeValue, true
+}
+
+// DeleteHead 删除链表头
+func (l *List) DeleteHead() (interface{}, bool) {
+
+	if l.IsEmpty() {
+		return nil, false
+	}
+
+	var headNodeValue = l.head.v
+
+	if l.tail == l.head {
+		l.head = nil
+		l.root = nil
+		l.tail = nil
+		return headNodeValue, true
+	}
+
+	l.head = l.head.next
+	l.root = l.head.next
+	return headNodeValue, true
+}
+
 func (l *List) String() string {
-	if l.head == nil {
+	if l.IsEmpty() {
 		return "empty List"
 	}
 
