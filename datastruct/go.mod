@@ -1,6 +1,6 @@
 module github.com/zxmfke/train/datastruct
 
-go 1.17
+go 1.20
 
 require (
 	github.com/go-playground/assert v1.2.1
