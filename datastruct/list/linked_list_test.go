@@ -7,7 +7,7 @@ import (
 )
 
 func TestList_String(t *testing.T) {
-	root := NewListRoot()
+	root := NewLinkedListRoot()
 
 	t.Logf("%s", root)
 
@@ -18,7 +18,7 @@ func TestList_String(t *testing.T) {
 }
 
 func TestNewListRootWithInit(t *testing.T) {
-	root := NewListRootWithInit(1, 1)
+	root := NewLinkedListRootWithInit(1, 1)
 
 	_, has := root.Get(1)
 	assert.Equal(t, true, has)
@@ -28,7 +28,7 @@ func TestNewListRootWithInit(t *testing.T) {
 }
 
 func TestList_Set(t *testing.T) {
-	root := NewListRoot()
+	root := NewLinkedListRoot()
 
 	cases := []struct {
 		name      string
@@ -73,7 +73,7 @@ func TestList_Set(t *testing.T) {
 }
 
 func TestList_Get(t *testing.T) {
-	root := NewListRoot()
+	root := NewLinkedListRoot()
 	root.Set(1, 1)
 	root.Set(2, 2)
 
@@ -114,7 +114,7 @@ func TestList_Get(t *testing.T) {
 }
 
 func TestList_Delete(t *testing.T) {
-	root := NewListRoot()
+	root := NewLinkedListRoot()
 	root.Set(1, 1)
 	root.Set(2, 2)
 	root.Set(3, 3)
@@ -148,7 +148,7 @@ func TestList_Delete(t *testing.T) {
 			delKey:    3,
 			wantHas:   false,
 			print:     true,
-			wantPrint: "empty List",
+			wantPrint: "empty LinkedList",
 		},
 	}
 
@@ -168,7 +168,7 @@ func TestList_Delete(t *testing.T) {
 }
 
 func TestList_Search(t *testing.T) {
-	root := NewListRoot()
+	root := NewLinkedListRoot()
 	root.Set(1, 1)
 	root.Set(2, 2)
 
@@ -198,18 +198,18 @@ func TestList_Search(t *testing.T) {
 
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
-			node, has := root.search(tt.searchKey)
+			v, has := root.Search(tt.searchKey)
 
 			assert.Equal(t, has, tt.wantHas)
 			if has {
-				assert.Equal(t, node.v, tt.wantValue)
+				assert.Equal(t, v.(int), tt.wantValue)
 			}
 		})
 	}
 }
 
 func TestList_DeleteTail(t *testing.T) {
-	root := NewListRoot()
+	root := NewLinkedListRoot()
 	root.Set(1, 1)
 	root.Set(2, 2)
 	root.Set(3, 3)
@@ -267,7 +267,7 @@ func TestList_DeleteTail(t *testing.T) {
 }
 
 func TestList_DeleteHead(t *testing.T) {
-	root := NewListRoot()
+	root := NewLinkedListRoot()
 	root.Set(1, 1)
 	root.Set(2, 2)
 	root.Set(3, 3)

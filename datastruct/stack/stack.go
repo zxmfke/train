@@ -11,12 +11,12 @@ type ImplementStack interface {
 }
 
 type ListStack struct {
-	l     *list.List
+	l     *list.LinkedList
 	total int
 }
 
 func NewListStack() *ListStack {
-	return &ListStack{l: list.NewListRoot()}
+	return &ListStack{l: list.NewLinkedListRoot()}
 }
 
 // Push O(1)

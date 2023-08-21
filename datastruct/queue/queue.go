@@ -9,12 +9,12 @@ type ImplementQueue interface {
 }
 
 type ListQueue struct {
-	l     *list.List
+	l     *list.LinkedList
 	total int
 }
 
 func NewListQueue() *ListQueue {
-	return &ListQueue{l: list.NewListRoot()}
+	return &ListQueue{l: list.NewLinkedListRoot()}
 }
 
 // Enqueue O(1)

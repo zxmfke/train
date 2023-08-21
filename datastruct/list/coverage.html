@@ -55,7 +55,9 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">github.com/zxmfke/train/datastruct/list/list.go (100.0%)</option>
+				<option value="file0">github.com/zxmfke/train/datastruct/list/array_list.go (100.0%)</option>
+				
+				<option value="file1">github.com/zxmfke/train/datastruct/list/linked_list.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -73,7 +75,174 @@
 
 import "fmt"
 
-type List struct {
+type ArrayList struct {
+        total int
+        size  int
+        data  []*ArrayListKV
+}
+
+type ArrayListKV struct {
+        k int
+        v interface{}
+}
+
+func (a *ArrayListKV) String() string <span class="cov8" title="1">{
+        return fmt.Sprintf("[%d:%v]", a.k, a.v)
+}</span>
+
+func NewArrayListRoot() *ArrayList <span class="cov8" title="1">{
+        root := new(ArrayList)
+        return root
+}</span>
+
+func NewArrayListRootWithSize(size int) *ArrayList <span class="cov8" title="1">{
+        l := new(ArrayList)
+        l.size = size
+        l.data = make([]*ArrayListKV, 0, size)
+        return l
+}</span>
+
+func newArrayListKV(key int, v interface{}) *ArrayListKV <span class="cov8" title="1">{
+        return &amp;ArrayListKV{
+                k: key,
+                v: v,
+        }
+}</span>
+
+func (a *ArrayList) Get(key int) (interface{}, bool) <span class="cov8" title="1">{
+        kv, _, ok := a.search(key)
+        if !ok </span><span class="cov8" title="1">{
+                return nil, false
+        }</span>
+        <span class="cov8" title="1">return kv.v, ok</span>
+}
+
+func (a *ArrayList) Set(key int, v interface{}) <span class="cov8" title="1">{
+
+        kv, _, has := a.search(key)
+        if !has </span><span class="cov8" title="1">{
+                kv = newArrayListKV(key, v)
+                a.total++
+                a.data = append(a.data, kv)
+                return
+        }</span>
+
+        <span class="cov8" title="1">kv.v = v
+        return</span>
+}
+
+func (a *ArrayList) Delete(key int) <span class="cov8" title="1">{
+
+        _, index, has := a.search(key)
+        if !has </span><span class="cov8" title="1">{
+                return
+        }</span>
+
+        <span class="cov8" title="1">if index == 0 </span><span class="cov8" title="1">{
+                _, _ = a.DeleteHead()
+                return
+        }</span>
+
+        <span class="cov8" title="1">if index == a.total-1 </span><span class="cov8" title="1">{
+                _, _ = a.DeleteTail()
+                return
+        }</span>
+
+        <span class="cov8" title="1">a.data = append(a.data[:index], a.data[index+1:]...)
+        a.total--
+
+        return</span>
+}
+
+// IsEmpty 是否为空
+func (a *ArrayList) IsEmpty() bool <span class="cov8" title="1">{
+        return a.total == 0
+}</span>
+
+// DeleteTail 删除链表尾
+func (a *ArrayList) DeleteTail() (interface{}, bool) <span class="cov8" title="1">{
+
+        if a.IsEmpty() </span><span class="cov8" title="1">{
+                return nil, false
+        }</span>
+
+        <span class="cov8" title="1">var tailKV = a.data[a.total-1]
+
+        a.total--
+
+        if a.IsEmpty() </span><span class="cov8" title="1">{
+                a.data = make([]*ArrayListKV, 0, a.size)
+                return tailKV.v, true
+        }</span>
+
+        <span class="cov8" title="1">a.data = a.data[:a.total]
+        return tailKV.v, true</span>
+}
+
+// DeleteHead 删除链表头
+func (a *ArrayList) DeleteHead() (interface{}, bool) <span class="cov8" title="1">{
+
+        if a.IsEmpty() </span><span class="cov8" title="1">{
+                return nil, false
+        }</span>
+
+        <span class="cov8" title="1">var headKV = a.data[0]
+
+        a.total--
+
+        if a.IsEmpty() </span><span class="cov8" title="1">{
+                a.data = make([]*ArrayListKV, 0, a.size)
+                return headKV.v, true
+        }</span>
+
+        <span class="cov8" title="1">a.data = a.data[1:]
+
+        return headKV.v, true</span>
+}
+
+func (a *ArrayList) String() string <span class="cov8" title="1">{
+        if a.IsEmpty() </span><span class="cov8" title="1">{
+                return "empty ArrayList"
+        }</span>
+
+        <span class="cov8" title="1">var listString = ""
+
+        for i := 0; i &lt; a.total; i++ </span><span class="cov8" title="1">{
+                listString += fmt.Sprintf("--&gt;%s", a.data[i])
+        }</span>
+
+        <span class="cov8" title="1">return listString</span>
+}
+
+func (a *ArrayList) search(key int) (*ArrayListKV, int, bool) <span class="cov8" title="1">{
+        if a.IsEmpty() </span><span class="cov8" title="1">{
+                return nil, 0, false
+        }</span>
+
+        <span class="cov8" title="1">for i := 0; i &lt; a.total; i++ </span><span class="cov8" title="1">{
+                if a.data[i].k == key </span><span class="cov8" title="1">{
+                        return a.data[i], i, true
+                }</span>
+        }
+
+        <span class="cov8" title="1">return nil, 0, false</span>
+}
+
+func (a *ArrayList) Search(key int) (interface{}, bool) <span class="cov8" title="1">{
+        node, _, has := a.search(key)
+        if !has </span><span class="cov8" title="1">{
+                return nil, false
+        }</span>
+
+        <span class="cov8" title="1">return node.v, true</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package list
+
+import "fmt"
+
+type LinkedList struct {
         head *LNode
         tail *LNode
         root *LNode
@@ -86,14 +255,14 @@ type LNode struct {
         pre  *LNode
 }
 
-func NewListRoot() *List <span class="cov8" title="1">{
-        root := new(List)
+func NewLinkedListRoot() *LinkedList <span class="cov8" title="1">{
+        root := new(LinkedList)
         return root
 }</span>
 
-func NewListRootWithInit(key int, v interface{}) *List <span class="cov8" title="1">{
-        l := new(List)
-        node := newListNode(key, v)
+func NewLinkedListRootWithInit(key int, v interface{}) *LinkedList <span class="cov8" title="1">{
+        l := new(LinkedList)
+        node := newLinkedListNode(key, v)
         l.head = node
         l.tail = node
         l.root = node
@@ -101,7 +270,7 @@ func NewListRootWithInit(key int, v interface{}) *List <span class="cov8" title=
         return l
 }</span>
 
-func newListNode(key int, v interface{}) *LNode <span class="cov8" title="1">{
+func newLinkedListNode(key int, v interface{}) *LNode <span class="cov8" title="1">{
         return &amp;LNode{
                 k:    key,
                 v:    v,
@@ -110,21 +279,22 @@ func newListNode(key int, v interface{}) *LNode <span class="cov8" title="1">{
         }
 }</span>
 
-func (l *List) init(key int, v interface{}) <span class="cov8" title="1">{
-        node := newListNode(key, v)
+func (l *LinkedList) init(key int, v interface{}) <span class="cov8" title="1">{
+        node := newLinkedListNode(key, v)
         l.tail = node
         l.head = node
         l.root = node
 }</span>
 
-func (l *List) Get(key int) (interface{}, bool) <span class="cov8" title="1">{
+func (l *LinkedList) Get(key int) (interface{}, bool) <span class="cov8" title="1">{
         node, ok := l.search(key)
         if !ok </span><span class="cov8" title="1">{
                 return nil, false
         }</span>
         <span class="cov8" title="1">return node.v, ok</span>
 }
-func (l *List) Set(key int, v interface{}) <span class="cov8" title="1">{
+
+func (l *LinkedList) Set(key int, v interface{}) <span class="cov8" title="1">{
         if l.head == nil </span><span class="cov8" title="1">{
                 l.init(key, v)
                 return
@@ -136,13 +306,13 @@ func (l *List) Set(key int, v interface{}) <span class="cov8" title="1">{
                 return
         }</span>
 
-        <span class="cov8" title="1">node = newListNode(key, v)
+        <span class="cov8" title="1">node = newLinkedListNode(key, v)
         l.tail.next = node
         node.pre = l.tail
         l.tail = node</span>
 }
 
-func (l *List) Delete(key int) <span class="cov8" title="1">{
+func (l *LinkedList) Delete(key int) <span class="cov8" title="1">{
         nextNode := l.root
         var deleteNode *LNode
 
@@ -169,8 +339,7 @@ func (l *List) Delete(key int) <span class="cov8" title="1">{
 
         // 如果是尾巴，把尾巴的前一个节点的next置为空
         <span class="cov8" title="1">if l.tail == deleteNode </span><span class="cov8" title="1">{
-                deleteNode.pre.next = nil
-                l.tail = deleteNode.pre
+                l.DeleteTail()
                 return
         }</span>
 
@@ -189,9 +358,56 @@ func (l *List) Delete(key int) <span class="cov8" title="1">{
         return</span>
 }
 
-func (l *List) String() string <span class="cov8" title="1">{
-        if l.head == nil </span><span class="cov8" title="1">{
-                return "empty List"
+// IsEmpty 是否为空
+func (l *LinkedList) IsEmpty() bool <span class="cov8" title="1">{
+        return l.head == nil
+}</span>
+
+// DeleteTail 删除链表尾
+func (l *LinkedList) DeleteTail() (interface{}, bool) <span class="cov8" title="1">{
+
+        if l.IsEmpty() </span><span class="cov8" title="1">{
+                return nil, false
+        }</span>
+
+        <span class="cov8" title="1">var tailNodeValue = l.tail.v
+
+        if l.tail == l.head </span><span class="cov8" title="1">{
+                l.head = nil
+                l.root = nil
+                l.tail = nil
+                return tailNodeValue, true
+        }</span>
+
+        <span class="cov8" title="1">l.tail.pre.next = nil
+        l.tail = l.tail.pre
+        return tailNodeValue, true</span>
+}
+
+// DeleteHead 删除链表头
+func (l *LinkedList) DeleteHead() (interface{}, bool) <span class="cov8" title="1">{
+
+        if l.IsEmpty() </span><span class="cov8" title="1">{
+                return nil, false
+        }</span>
+
+        <span class="cov8" title="1">var headNodeValue = l.head.v
+
+        if l.tail == l.head </span><span class="cov8" title="1">{
+                l.head = nil
+                l.root = nil
+                l.tail = nil
+                return headNodeValue, true
+        }</span>
+
+        <span class="cov8" title="1">l.head = l.head.next
+        l.root = l.head.next
+        return headNodeValue, true</span>
+}
+
+func (l *LinkedList) String() string <span class="cov8" title="1">{
+        if l.IsEmpty() </span><span class="cov8" title="1">{
+                return "empty LinkedList"
         }</span>
 
         <span class="cov8" title="1">var listString = ""
@@ -206,7 +422,7 @@ func (l *List) String() string <span class="cov8" title="1">{
         <span class="cov8" title="1">return listString</span>
 }
 
-func (l *List) search(key int) (*LNode, bool) <span class="cov8" title="1">{
+func (l *LinkedList) search(key int) (*LNode, bool) <span class="cov8" title="1">{
         nextNode := l.root
 
         for nextNode != nil </span><span class="cov8" title="1">{
@@ -217,6 +433,15 @@ func (l *List) search(key int) (*LNode, bool) <span class="cov8" title="1">{
         }
 
         <span class="cov8" title="1">return nil, false</span>
+}
+
+func (l *LinkedList) Search(key int) (interface{}, bool) <span class="cov8" title="1">{
+        node, has := l.search(key)
+        if !has </span><span class="cov8" title="1">{
+                return nil, false
+        }</span>
+
+        <span class="cov8" title="1">return node.v, true</span>
 }
 </pre>
 		

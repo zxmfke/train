@@ -11,7 +11,7 @@ var (
 )
 
 type HSTable struct {
-	data     []*list.List
+	data     []*list.LinkedList
 	hashFunc HashFun
 	max      int
 }
@@ -24,9 +24,9 @@ func NewHSTable(hf HashFun, size int) (*HSTable, error) {
 	}
 
 	hsm := new(HSTable)
-	hsm.data = make([]*list.List, size)
+	hsm.data = make([]*list.LinkedList, size)
 	for i := 0; i < size; i++ {
-		hsm.data[i] = list.NewListRoot()
+		hsm.data[i] = list.NewLinkedListRoot()
 	}
 
 	hsm.max = size
