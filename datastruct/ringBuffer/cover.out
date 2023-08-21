@@ -1,0 +1,18 @@
+mode: set
+github.com/zxmfke/train/datastruct/ringBuffer/ring_buffer.go:23.42,30.2 1 1
+github.com/zxmfke/train/datastruct/ringBuffer/ring_buffer.go:32.36,33.18 1 1
+github.com/zxmfke/train/datastruct/ringBuffer/ring_buffer.go:33.18,35.3 1 1
+github.com/zxmfke/train/datastruct/ringBuffer/ring_buffer.go:37.2,37.25 1 1
+github.com/zxmfke/train/datastruct/ringBuffer/ring_buffer.go:40.49,42.27 1 1
+github.com/zxmfke/train/datastruct/ringBuffer/ring_buffer.go:42.27,44.3 1 1
+github.com/zxmfke/train/datastruct/ringBuffer/ring_buffer.go:46.2,49.15 4 1
+github.com/zxmfke/train/datastruct/ringBuffer/ring_buffer.go:52.56,53.16 1 1
+github.com/zxmfke/train/datastruct/ringBuffer/ring_buffer.go:53.16,55.3 1 1
+github.com/zxmfke/train/datastruct/ringBuffer/ring_buffer.go:57.2,60.12 4 1
+github.com/zxmfke/train/datastruct/ringBuffer/ring_buffer.go:63.35,65.22 2 1
+github.com/zxmfke/train/datastruct/ringBuffer/ring_buffer.go:65.22,67.3 1 1
+github.com/zxmfke/train/datastruct/ringBuffer/ring_buffer.go:70.35,72.22 2 1
+github.com/zxmfke/train/datastruct/ringBuffer/ring_buffer.go:72.22,74.3 1 1
+github.com/zxmfke/train/datastruct/ringBuffer/ring_buffer.go:77.38,78.27 1 1
+github.com/zxmfke/train/datastruct/ringBuffer/ring_buffer.go:78.27,80.3 1 1
+github.com/zxmfke/train/datastruct/ringBuffer/ring_buffer.go:82.2,88.20 6 1
